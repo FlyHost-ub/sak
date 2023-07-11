@@ -2,6 +2,7 @@
 Main entry point, use main.py instead
 """
 
-from . import main
+
+import main
 
 main.run()
