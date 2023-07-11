@@ -200,7 +200,7 @@ async def buy_menu(call: CallbackQuery):
     """Main depositing menu"""
     balance = users_db.cur.execute("""SELECT * FROM users WHERE id = ?""", (call.from_user.id,)).fetchone()[1]
 
-    await call.message.edit_text(strings.BUY.format(balance, config.PRICE, cp.get_price(config.PRICE)), reply_markup=keyboards.buy)
+    await call.message.edit_text(strings.BUY.format(balance, config.PRICE, reply_markup=keyboards.buy)
 
 
 def run():
